@@ -1,9 +1,6 @@
 import tkinter as tk
 from functools import partial
 
-personal_information = []
-food_list = []
-IsInformatiomRight = False
 
 
 
@@ -14,6 +11,7 @@ class basedesk():#基底視窗
     self.root.title("Calories Calculation")
     self.root.geometry("800x440+600+300")
     initface(self.root)
+
 class initface():#初始畫面
   def __init__(self,master):
     self.master = master
@@ -79,6 +77,7 @@ class face1():#第1個視窗
     
    
   def cin(self,name_entry,sexual_entry,age_entry,weight_entry,height_entry):
+    global personal_information
     name = name_entry.get()
     sexual = sexual_entry.get()
     age = age_entry.get()
@@ -105,7 +104,7 @@ class face1():#第1個視窗
            error_text_height = tk.Label(self.face1,text="Please enter right height",bg="#323232",fg="red")
            error_text_height.pack()
       else:
-        personal_information = [name,sexual,age,weight,height]
+        personal_information = [name,sexual,float_age,float_weight,float_height]
         IsInformatiomRight = True
         self.change2()
     except ValueError:
@@ -119,7 +118,7 @@ class face1():#第1個視窗
     face2(self.master)
 
 
-class face2():
+class face2():#第二個視窗
   def __init__(self,master):
     self.master = master
     self.master.config(bg="#323232")#顏色
@@ -224,6 +223,7 @@ class face2():
 
   #讀取輸入
   def cin2(self):
+    global food_list
     rice = self.rice_entry.get()
     noodle = self.noodle_entry.get()
     vegetable = self.vegetable_entry.get()
@@ -250,6 +250,7 @@ class face2():
             error_text_ValueError = tk.Label(self.face2,text="Please enter right information",bg="#323232",fg="red")
             error_text_ValueError.place(x=320,y=360)
             food_list.clear()
+            return
     self.change3()
   def change3(self):
     self.face2.destroy()
@@ -347,6 +348,7 @@ class face3():
     self.pingpong_entry.place(width=115,height=20,x=665, y=250)
     self.pingpong_btn.configure(state=tk.DISABLED)
   def cin3(self):
+      global exercise_list
       walking = self.walking_entry.get()
       jogging = self.jogging_entry.get()
       running = self.running_entry.get()
@@ -358,7 +360,7 @@ class face3():
       badminton = self.badminton_entry.get()
       pingpong = self.pingpong_entry.get()
       exercise_list = [walking,jogging,running,swimming,cycling,basketball,rope_skipping,Yoga,badminton,pingpong]
-      for i in range(len(food_list)):
+      for i in range(len(exercise_list)):
         if exercise_list[i] == "":
           exercise_list[i] = 0
         else:
@@ -375,14 +377,72 @@ class face3():
             exercise_list.clear()
       self.change4()
   def change4(self):
-    self.face3.destroy()
+    self.face3.destroy()#第三個視窗
+    face4(self.master)
+
+class face4():
+  def __init__(self,master):
+    global food_list,exercise_list,personal_information
+    self.master = master
+    self.master.config(bg="#323232")#顏色
+    self.master.attributes("-alpha",0.95)#透明度
+    self.master.attributes("-topmost",1)#置頂
+    #第4個視窗
+    self.face4 = tk.Frame(self.master,width = 800,height = 440,bg = "#323232")
+    self.face4.pack()
+    #運算區
 
 
+    #計算運動消耗量
+    Sport_consuming=1.75*exercise_list[0]+4.1*exercise_list[1]+7.5*exercise_list[2]+4.1*exercise_list[3]+6.2*exercise_list[4]+3.65*exercise_list[5]+5.25*exercise_list[6]+1.5*exercise_list[7]+2.55*exercise_list[8]+2.1*exercise_list[9]
+    #尋找PA值並計算基本消耗量
+    if Sport_consuming <= 2.8 and personal_information[1] == "Female":
+       Basic_consuming=354-6.91*personal_information[2]+1*(9.36*personal_information[3]+7.26*personal_information[4])
+    if Sport_consuming <= 2.8 and personal_information[1] == "Male": 
+       Basic_consuming=662-9.53*personal_information[2]+1*(15.91*personal_information[3]+5.396*personal_information[4])
+    if 9.8 >= Sport_consuming > 2.8 and personal_information[1] == "Female" :
+       Basic_consuming=354-6.91*personal_information[2]+1.12*(9.36*personal_information[3]+7.26*personal_information[4])
+    if 9.8 >= Sport_consuming > 2.8 and personal_information[1] == "Male" :
+       Basic_consuming=662-9.53*personal_information[2]+1.11*(15.91*personal_information[3]+5.396*personal_information[4])
+    if 23.8 >= Sport_consuming > 9.8 and personal_information[1] == "Female" :
+       Basic_consuming=354-6.91*personal_information[2]+1.27*(9.36*personal_information[3]+7.26*personal_information[4])
+    if 23.8 >= Sport_consuming > 9.8 and personal_information[1] == "Male" :
+       Basic_consuming=662-9.53*personal_information[2]+1.25*(15.91*personal_information[3]+5.396*personal_information[4])
+    if Sport_consuming > 23.8 and personal_information[1] == "Female" :
+       Basic_consuming=354-6.91*personal_information[2]+1.45*(9.36*personal_information[3]+7.26*personal_information[4])
+    if Sport_consuming > 23.8 and personal_information[1] == "Male" :
+       Basic_consuming=662-9.53*personal_information[2]+1.48*(15.91*personal_information[3]+5.396*personal_information[4])
 
+    #一天消耗量
+    Day_consuming = Basic_consuming 
+    str_Day_consuming = str(int(Day_consuming))
 
+    #計算一天攝取量
+    Day_ingesting = 225*food_list[0]+138.1*food_list[1]+65.2*food_list[2]+242.1*food_list[3]+250.5*food_list[4]+150*food_list[5]+272*food_list[6]+294*food_list[7]+264.6*food_list[8]+600*food_list[9]
+    str_Day_ingesting = str(int(Day_ingesting))
  
 
+    #計算差值
+    Difference = Day_ingesting-Day_consuming
+    str_Difference = str(int(Difference))
+    
+    #宣告名字變成字串
+    name=personal_information[0]
+    name_str=str(name)
+
+    Day_consuming_text=tk.Label(self.face4,text=name_str+",your day consuming is"+str_Day_consuming,bg="#323232",fg="white")
+    Day_consuming_text.pack()
+
+    Day_ingesting_text=tk.Label(self.face4,text=name_str+",your day ingesting is"+str_Day_ingesting,bg="#323232",fg="white")
+    Day_ingesting_text.pack()
+
+    Difference_text=tk.Label(self.face4,text=name_str+",your Difference is"+str_Difference,bg="#323232",fg="white")
+    Difference_text.pack()
+
+
+   
+
 if __name__ == '__main__':    
-    root = tk.Tk()
-    basedesk(root)
-    root.mainloop()
+  root = tk.Tk()
+  basedesk(root)
+  root.mainloop()
