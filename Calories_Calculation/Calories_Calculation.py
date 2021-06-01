@@ -367,12 +367,12 @@ class face3():
           try:
             exercise_list[i] = float(exercise_list[i])
             if exercise_list[i] < 0:
-              error_text_ValueError = Label(text="Please enter right information",bg="#323232",fg="red")
+              error_text_ValueError = tk.Label(self.face3,text="Please enter right information",bg="#323232",fg="red")
               error_text_ValueError.place(x=320,y=360)
               exercise_list.clear()
               return
           except ValueError:
-            error_text_ValueError = Label(text="Please enter right information",bg="#323232",fg="red")
+            error_text_ValueError = tk.Label(self.face3,text="Please enter right information",bg="#323232",fg="red")
             error_text_ValueError.place(x=320,y=360)
             exercise_list.clear()
       self.change4()
